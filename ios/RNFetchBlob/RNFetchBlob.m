@@ -413,13 +413,22 @@ RCT_EXPORT_METHOD(lstat:(NSString *)path callback:(RCTResponseSenderBlock) callb
 
     NSMutableArray * res = [[NSMutableArray alloc] init];
     if(isDir == YES) {
+        NSDictionary * validObject;
+        
         for(NSString * p in files) {
             NSString * filePath = [NSString stringWithFormat:@"%@/%@", path, p];
-            [res addObject:[RNFetchBlobFS stat:filePath error:&error]];
+            
+            validObject = [RNFetchBlobFS stat:filePath error:&error];
+            if(validObject != nil) {
+                [res addObject:validObject];
+            }
         }
     }
     else {
-        [res addObject:[RNFetchBlobFS stat:path error:&error]];
+        NSDictionary * validObject = [RNFetchBlobFS stat:path error:&error];
+        if(validObject != nil) {
+            [res addObject:validObject];
+        }
     }
 
     if(error == nil)
